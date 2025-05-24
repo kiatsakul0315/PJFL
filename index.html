@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Teachable Machine Image Model</title>
+
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column h-100 text-bg-dark">
+
+  
+  <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+    <div class="col-md-3 mb-2 mb-md-0">
+      <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+        <svg class="bi" width="40" height="32" role="img" aria-label="Bootstrap">
+          <use xlink:href="#bootstrap"></use>
+        </svg>
+      </a>
+    </div>
+
+    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+      <li><a href="/PJFL/index.html" class="nav-link px-2 link-secondary">Home</a></li>
+      <li><a href="/PJFL/Ai/Filetest.html" class="nav-link px-2">อัพรูป</a></li>
+      <li><a href="/PJFL/Ai/webcamtest.html" class="nav-link px-2">กล้อง</a></li>
+      <li><a href="#" class="nav-link px-2">FAQs</a></li>
+      <li><a href="#" class="nav-link px-2">About</a></li>
+    </ul>
+
+    <div class="col-md-3 text-end">
+      <button type="button" class="btn btn-outline-primary me-2">Login</button>
+      <button type="button" class="btn btn-primary ms-auto">Sign-up</button>
+    </div>
+  </header>
+
+  
+  <main class="flex-grow-1 d-flex justify-content-center align-items-center">
+    
+  </main>
+
+  
+  <footer class="mt-auto text-white-50 py-3 text-center">
+    <p>Cover template for <a href="https://getbootstrap.com/" class="text-white">Bootstrap</a>, by <a
+        href="https://twitter.com/mdo" class="text-white">@mdo</a>.</p>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+  <script type="text/javascript">
+    const URL = "https://teachablemachine.withgoogle.com/models/llV6YyKl7/";
+    let model, labelContainer, maxPredictions;
+
+    
+    async function loadModel() {
+        const modelURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
+
+        
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+
+        
+        labelContainer = document.getElementById("label-container");
+        for (let i = 0; i < maxPredictions; i++) {
+            labelContainer.appendChild(document.createElement("div"));
+        }
+    }
+
+    
+    async function predictImage(file) {
+        const imgElement = document.getElementById("uploadedImage");
+
+        
+        const reader = new FileReader();
+        reader.onload = async function (event) {
+            imgElement.src = event.target.result; 
+            const img = new Image();
+            img.src = event.target.result;
+
+            img.onload = async () => {
+                
+                const prediction = await model.predict(img);
+                for (let i = 0; i < maxPredictions; i++) {
+                    const classPrediction = 
+                        prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+                    labelContainer.childNodes[i].innerHTML = classPrediction;
+                }
+            };
+        };
+        reader.readAsDataURL(file); 
+    }
+
+    
+    document.getElementById("imageInput").addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            predictImage(file);
+        }
+    });
+
+    
+    loadModel();
+  </script>
+
+</body>
+
+</html>

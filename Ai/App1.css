@@ -1,0 +1,35 @@
+body {
+    background-color: #343a40;
+  }
+  
+  #image-container {
+    margin-top: 20px;
+  }
+  
+  #uploadedImage {
+    width: 500px;  /* ขยายขนาดความกว้าง */
+    height: 500px; /* ขยายขนาดความสูง */
+    object-fit: contain; /* ให้รูปภาพไม่ถูกบิดเบี้ยว */
+      
+  }
+  
+  #label-container .prediction-item {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
+  
+  #label-container .highlight {
+    background-color: #FFD700; /* Highlight selected prediction */
+    font-weight: bold;
+  }
+  
+  footer {
+    background-color: #212529;
+    color: #ccc;
+  }
+  
